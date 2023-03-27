@@ -2,7 +2,7 @@
   <h3 mat-dialog-title>Add new Issue</h3>
 
   <form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
-
+  <!-- here each feild checks if the data entred is valid or not, if not valid dispalys an error message -->
     <div class="form">
       <mat-form-field color="accent">
         <input matInput #input class="form-control" placeholder="Id" [(ngModel)]="data.id" name="id" required >
@@ -44,7 +44,8 @@
         <input matInput placeholder="Updated at" [(ngModel)]="data.updated_at" name="updated_at">
       </mat-form-field>
     </div>
-
+    <!-- mat-dialog-close is activated when we click the button, first it call the confirmAdd() which calls add data from DataService -->
+    <!-- onnoclick when called closes the data -->
     <div mat-dialog-actions>
       <button mat-button [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1" (click)="confirmAdd()">Save</button>
       <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>

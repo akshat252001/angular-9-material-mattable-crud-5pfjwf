@@ -9,21 +9,30 @@
 <!-- mat-toolbar is continer for headers, titles and actions -->
 <div class="container mat-elevation-z8">
   <div class="form">
+    <!-- mat-form-feild is used to wrap servral components of material and add common text styles -->
     <mat-form-field floatPlaceholder="never" color="accent">
       <input matInput #filter placeholder="Filter issues" />
+      <!-- this is the filter element that will be accessed by, further we can access the dom properties of the element using nativeelement -->
     </mat-form-field>
   </div>
 
+  <!-- materail designed, styled data table  -->
+  <!-- data is provided to the table to the datasource input by [dataSource]="dataSource" wehre datasource is an array of issues -->
   <mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+    <!-- data is being passed to the table using datasource input  -->
     ng update @angular/cli @angular/core
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
 
-    <!-- ID Column -->
+    <!-- column template starts -->
     <ng-container matColumnDef="id">
+      <!-- column defination with name id  -->
       <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
       <mat-cell *matCellDef="let row">{{ row.id }}</mat-cell>
     </ng-container>
+    <!-- column template ends -->
+    <!-- mat-sort-header is used for sorting, when used with mat-table it uses the same id as that of the column -->
+
 
     <ng-container matColumnDef="title">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>

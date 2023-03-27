@@ -9,15 +9,18 @@ import {Issue} from '../../models/issue';
   templateUrl: '../../dialogs/add/add.dialog.html',
   styleUrls: ['../../dialogs/add/add.dialog.css']
 })
-
+// @inject is used to resolve token and inject dependency in constructor
+// matdialog ref proveids handle on modal
 export class AddDialogComponent {
+  // constructor is used to inject services 
   constructor(public dialogRef: MatDialogRef<AddDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Issue,
               public dataService: DataService) { }
-
+  // formcontrol are classes that handle data value and its validation status form example passing error messages when entry in the feild is empty or invalid
   formControl = new FormControl('', [
     Validators.required
     // Validators.email,
+    // validation not working
   ]);
 
   getErrorMessage() {

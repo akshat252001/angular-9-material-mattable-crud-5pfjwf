@@ -29,9 +29,12 @@ export class AppComponent implements OnInit {
               public dialogService: MatDialog,
               public dataService: DataService) {}
 
+  // @viewchild is tells us which dom element it has to refer
+  // @viewChild(template-refrence-variable, static parameter)
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild('filter',  {static: true}) filter: ElementRef;
+
 
   ngOnInit() {
     this.loadData();
@@ -61,13 +64,14 @@ export class AppComponent implements OnInit {
     // index row is used just for debugging proposes and can be removed
     this.index = i;
     console.log(this.index);
+    // pass data to the dialogcomponent 
     const dialogRef = this.dialogService.open(EditDialogComponent, {
       data: {id: id, title: title, state: state, url: url, created_at: created_at, updated_at: updated_at}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
-        // When using an edit things are little different, firstly we find record inside DataService by id
+        // we iterate until we reach the id of the elment to be edited
         const foundIndex = this.exampleDatabase.dataChange.value.findIndex(x => x.id === this.id);
         // Then you update that record using data from dialogData (values you enetered)
         this.exampleDatabase.dataChange.value[foundIndex] = this.dataService.getDialogData();
@@ -80,12 +84,14 @@ export class AppComponent implements OnInit {
   deleteItem(i: number, id: number, title: string, state: string, url: string) {
     this.index = i;
     this.id = id;
+    // when we click the delete btn we pass the data to the dialogcomponent
     const dialogRef = this.dialogService.open(DeleteDialogComponent, {
       data: {id: id, title: title, state: state, url: url}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 1) {
+        // here we iterate over the issue array, till we get the id of the element to be deleted
         const foundIndex = this.exampleDatabase.dataChange.value.findIndex(x => x.id === this.id);
         // for delete we use splice in order to remove single object from DataService
         this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
@@ -96,12 +102,15 @@ export class AppComponent implements OnInit {
 
 
   private refreshTable() {
+    // the data about the number of pages is updated 
     this.paginator._changePageSize(this.paginator.pageSize);
   }
 
   public loadData() {
     this.exampleDatabase = new DataService(this.httpClient);
+    // this.exampleDatabase is an intance of data service
     this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
+    // fromevent creates an observable that emits event of type keyup
     fromEvent(this.filter.nativeElement, 'keyup')
       // .debounceTime(150)
       // .distinctUntilChanged()
@@ -109,21 +118,28 @@ export class AppComponent implements OnInit {
         if (!this.dataSource) {
           return;
         }
+        // the value entered in the input feild is this.filter.nativeElement.value
         this.dataSource.filter = this.filter.nativeElement.value;
+        // this.datasource.filter here we are using the setter method
       });
   }
 }
 
+// DataSource is used to encapsulate any sorting, filtering
+// it has a minimum of 2 methods connect and disconnect connect is called by table to provide observable emmiting the data array, while disconnect is called when table is destroyed which cancels the subscription made by connect
+
 export class ExampleDataSource extends DataSource<Issue> {
   _filterChange = new BehaviorSubject('');
-
+  // all subscribers to recieve the last emitted value
   get filter(): string {
     return this._filterChange.value;
   }
 
   set filter(filter: string) {
     this._filterChange.next(filter);
+    // .next fires an event that all subscribers will listen to
   }
+  // getters and setters
 
   filteredData: Issue[] = [];
   renderedData: Issue[] = [];
