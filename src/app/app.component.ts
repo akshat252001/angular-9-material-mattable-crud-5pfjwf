@@ -164,7 +164,8 @@ export class ExampleDataSource extends DataSource<Issue> {
 
     this._exampleDatabase.getAllIssues();
 
-
+    // ... spread syntax
+    // .pipe(map) add the function to every element of displayDataChanges
     return merge(...displayDataChanges).pipe(map( () => {
         // Filter data
         this.filteredData = this._exampleDatabase.data.slice().filter((issue: Issue) => {
